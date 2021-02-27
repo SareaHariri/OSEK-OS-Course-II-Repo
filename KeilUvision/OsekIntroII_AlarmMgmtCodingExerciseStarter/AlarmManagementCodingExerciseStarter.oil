@@ -1,0 +1,50 @@
+/**
+ * os.oil this is the Alarm Management Coding Exercise Starter oil description 
+ * some of the oil object below are empty you have to complete them as per the requirements 
+ * 
+ * PLEASE FOLLOW THE SAME FORMAT EXACTLY AND DON'T CHANGE THE INDENTATION OR THE SPACING 
+ * PLEASE DON'T KEEP ANY BLANK LINE 
+ * PLEASE ADD A SPACE AROUND THE '=' SIGN WHEN YOU ASSIGN A VALUE TO AN ATTRIBUTE AS BELOW: 
+ *             CYCLETIME = 400 NOT CYCLETIME=400 
+ * PLEASE KEEP THE CLOSING BRACE IN A SEPARATE LINE AND THE OPENING BRACE IN THE SAME LINE AS BELOW
+ *             AUTOSTART = TRUE { 
+ *                   ..
+ *                   ... 
+ *             }; 
+ *
+ /
+CPU CORTEX-M4 {
+   OS S_OSEK {
+      STATUS = EXTENDED ;
+      STARTUPHOOK = FALSE;
+      ERRORHOOK = FALSE;
+      STACKOVERFLOWHOOK = FALSE;
+      SHUTDOWNHOOK = FALSE;
+      PRETASKHOOK = FALSE;
+      POSTTASKHOOK = FALSE;
+      USEGETSERVICEID = FALSE;
+      USEPARAMETERACCESS = FALSE;
+      USERESSCHEDULER = FALSE;
+      SYSTEMTICKMS = 10 ; 
+   };
+   TASK /*REPLACE WITH TASK ID */{
+      /*REPLACE THE TASK ATTRIBUTES */
+   };         
+   TASK /*REPLACE WITH TASK ID */{
+      /*REPLACE THE TASK ATTRIBUTES */
+   }; 
+   ALARM /*REPLACE WITH ALARM ID */ {
+      /*REPLACE THE ALARM ATTRIBUTES */
+   };
+   ALARM /*REPLACE WITH ALARM ID */ {
+      /*REPLACE THE ALARM ATTRIBUTES */
+   };       
+   ALARM /*REPLACE WITH ALARM ID */ {
+      /*REPLACE THE ALARM ATTRIBUTES */ 
+   };      
+   COUNTER MainCounter {
+      MINCYCLE = 1;
+      MAXALLOWEDVALUE = 0xFFFFFFFF;
+      TICKSPERBASE = 1;
+   };
+};

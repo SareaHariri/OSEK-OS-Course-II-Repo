@@ -1,0 +1,75 @@
+CPU CORTEX-M4 {
+        OS S_OSEK {
+				STATUS = EXTENDED ;
+				STARTUPHOOK = FALSE;
+				ERRORHOOK = FALSE;
+				STACKOVERFLOWHOOK = FALSE;
+				SHUTDOWNHOOK = FALSE;
+				PRETASKHOOK = FALSE;
+				POSTTASKHOOK = FALSE;
+				USEGETSERVICEID = FALSE;
+				USEPARAMETERACCESS = FALSE;
+				USERESSCHEDULER = FALSE;
+				SYSTEMTICKMS = 1 ; 
+        };   
+        TASK AppTask_Init{
+                PRIORITY = 25;
+                SCHEDULE = FULL;
+                ACTIVATION = 1;
+                AUTOSTART = TRUE; 
+                STACKSIZE = 50;
+        };         
+        TASK AppTask_Switch{
+                PRIORITY = 10;
+                SCHEDULE = FULL;
+                ACTIVATION = 1;
+                AUTOSTART = FALSE
+                STACKSIZE = 50;
+        };         
+        TASK AppTask_LedOn{
+                PRIORITY = 15;
+                SCHEDULE = FULL;
+                ACTIVATION = 1;
+                AUTOSTART = FALSE
+                STACKSIZE = 50;
+        }; 
+        TASK AppTask_LedOff{
+                PRIORITY = 20;
+                SCHEDULE = FULL;
+                ACTIVATION = 1;
+                AUTOSTART = FALSE
+                STACKSIZE = 50;
+        };         
+        ALARM Alrm_Switch {
+            COUNTER = MainCounter;
+            ACTION = ACTIVATETASK  {
+               TASK = AppTask_Switch;
+            };
+            AUTOSTART = TRUE {
+               ALARMTIME = 500; 
+               CYCLETIME = 10; 
+            };
+        }    
+        ALARM Alrm_LedOn {
+            COUNTER = MainCounter;
+            ACTION = ACTIVATETASK  {
+               TASK = AppTask_LedOn;
+            };
+            AUTOSTART = TRUE {
+               ALARMTIME = 500; 
+               CYCLETIME = 10; 
+            };
+        }        
+        ALARM Alrm_LedOff {
+            COUNTER = MainCounter;
+            ACTION = ACTIVATETASK  {
+               TASK = AppTask_LedOff;
+            };
+            AUTOSTART = FALSE;
+        }         
+        COUNTER MainCounter {
+            MINCYCLE = 1;
+            MAXALLOWEDVALUE = 0xFFFFFFFF;
+            TICKSPERBASE = 1;
+	};
+};

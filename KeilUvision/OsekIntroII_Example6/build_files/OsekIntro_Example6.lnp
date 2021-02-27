@@ -1,0 +1,10 @@
+--cpu=Cortex-M4.fp.sp
+".\build_files\hook.o"
+".\build_files\counter.o"
+"..\..\OsekLib\OsekLib.lib"
+".\build_files\keiluvisoin_startup.o"
+".\build_files\oscfg.o"
+".\build_files\osekintroii_example6.o"
+--library_type=microlib --ro-base 0x00000000 --entry 0x00000000 --rw-base 0x20000000 --entry Reset_Handler --first __Vectors --strict --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\OsekIntro_Example6.map" -o .\build_files\OsekIntro_Example6.axf

@@ -1,0 +1,72 @@
+CPU CORTEX-M4 {
+        OS S_OSEK {
+				STATUS = EXTENDED ;
+				STARTUPHOOK = FALSE;
+				ERRORHOOK = FALSE;
+				STACKOVERFLOWHOOK = FALSE;
+				SHUTDOWNHOOK = FALSE;
+				PRETASKHOOK = TRUE;
+				POSTTASKHOOK = TRUE;
+				USEGETSERVICEID = FALSE;
+				USEPARAMETERACCESS = FALSE;
+				USERESSCHEDULER = FALSE;
+				SYSTEMTICKMS = 1 ; 
+        };
+        TASK AppTask_MultiEventTask{
+                PRIORITY = 100;
+                SCHEDULE = FULL;
+                ACTIVATION = 1;
+                AUTOSTART = TRUE; 
+                STACKSIZE = 50;
+                EVENT = Event5Ticks ; 
+                EVENT = Event10Ticks ; 
+                EVENT = Event35Ticks ; 
+        };        
+        ALARM Alrm_Periodic5Ticks {
+            COUNTER = MainCounter;
+            ACTION = SETEVENT  {
+               TASK = AppTask_MultiEventTask;
+               EVENT = Event5Ticks; 
+            };
+            AUTOSTART = TRUE {
+               ALARMTIME = 1000; 
+               CYCLETIME = 5; 
+            };
+        }
+        ALARM Alrm_Periodic10Ticks {
+            COUNTER = MainCounter;
+            ACTION = SETEVENT  {
+               TASK = AppTask_MultiEventTask;
+               EVENT = Event10Ticks; 
+            };
+            AUTOSTART = TRUE {
+               ALARMTIME = 1000; 
+               CYCLETIME = 10; 
+            };
+        }
+        ALARM Alrm_Periodic35Ticks {
+            COUNTER = MainCounter;
+            ACTION = SETEVENT  {
+               TASK = AppTask_MultiEventTask;
+               EVENT = Event35Ticks; 
+            };
+            AUTOSTART = TRUE {
+               ALARMTIME = 1000; 
+               CYCLETIME = 35; 
+            };
+        }                
+        COUNTER MainCounter {
+            MINCYCLE = 1;
+            MAXALLOWEDVALUE = 0xFFFFFFFF;
+            TICKSPERBASE = 1;
+	};
+   EVENT Event5Ticks{
+            MASK = AUTO ; 
+   }
+   EVENT Event10Ticks{
+            MASK = AUTO ; 
+   }
+   EVENT Event35Ticks{
+            MASK = AUTO ; 
+   } 
+};

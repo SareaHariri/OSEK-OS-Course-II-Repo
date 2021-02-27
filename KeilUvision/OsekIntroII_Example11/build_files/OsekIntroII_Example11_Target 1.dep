@@ -1,0 +1,38 @@
+Dependencies for Project 'OsekIntroII_Example11', Target 'Target 1': (DO NOT MODIFY !)
+CompilerVersion: 5060750::V5.06 update 6 (build 750)::.\ARMCC
+F (..\..\OsekLib\counter.c)(0x5ECA6BFB)(-c --cpu Cortex-M4.fp.sp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I ..\..\oil -I ..\..\OsekLib-I.\RTE\_Target_1-IC:\Users\Sarea.alhariri\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Sarea.alhariri\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="530" -D_RTE_ -DTM4C123GH6PM -D_RTE_-o .\build_files\counter.o --omf_browse .\build_files\counter.crf --depend .\build_files\counter.d)
+I (..\..\OsekLib\counter.h)(0x5E9D43D8)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5E53A4BC)
+I (..\..\oil\OsCfg.h)(0x5F44D6D9)
+I (..\..\OsekLib\OsTypes.h)(0x5EAEAC08)
+I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5E53A4BC)
+F (..\..\OsekLib\counter.h)(0x5E9D43D8)()
+F (..\..\OsekLib\os.h)(0x5EB3FB68)()
+F (..\..\OsekLib\OsekLib.lib)(0x5F368048)()
+F (..\..\OsekLib\OsTypes.h)(0x5EAEAC08)()
+F (..\..\OsekLib\startup\keilUvisoin_startup.s)(0x5EB3FBA0)(--cpu Cortex-M4.fp.sp --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_Target_1-IC:\Users\Sarea.alhariri\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Sarea.alhariri\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123--pd "__UVISION_VERSION SETA 530" --pd "_RTE_ SETA 1" --pd "TM4C123GH6PM SETA 1" --pd "_RTE_ SETA 1"--list .\keiluvisoin_startup.lst --xref -o .\build_files\keiluvisoin_startup.o --depend .\build_files\keiluvisoin_startup.d)
+F (..\..\oil\OsCfg.c)(0x5F44D6D9)(-c --cpu Cortex-M4.fp.sp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I ..\..\oil -I ..\..\OsekLib-I.\RTE\_Target_1-IC:\Users\Sarea.alhariri\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Sarea.alhariri\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="530" -D_RTE_ -DTM4C123GH6PM -D_RTE_-o .\build_files\oscfg.o --omf_browse .\build_files\oscfg.crf --depend .\build_files\oscfg.d)
+I (..\..\oil\OsCfg.h)(0x5F44D6D9)
+I (..\..\OsekLib\OsTypes.h)(0x5EAEAC08)
+I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5E53A4BC)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5E53A4BC)
+F (..\..\oil\OsCfg.h)(0x5F44D6D9)()
+F (.\tm4c123gh6pm.h)(0x5B94E230)()
+F (.\sysctl.h)(0x5D089DC3)()
+F (.\hw_memmap.h)(0x5C161D2E)()
+F (.\gpio.h)(0x5C161C93)()
+F (.\driverlib.lib)(0x5E78841B)()
+F (.\OsekIntroII_Example11.c)(0x5F44D6BB)(-c --cpu Cortex-M4.fp.sp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I ..\..\oil -I ..\..\OsekLib-I.\RTE\_Target_1-IC:\Users\Sarea.alhariri\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Sarea.alhariri\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="530" -D_RTE_ -DTM4C123GH6PM -D_RTE_-o .\build_files\osekintroii_example11.o --omf_browse .\build_files\osekintroii_example11.crf --depend .\build_files\osekintroii_example11.d)
+I (..\..\OsekLib\os.h)(0x5EB3FB68)
+I (..\..\oil\OsCfg.h)(0x5F44D6D9)
+I (..\..\OsekLib\OsTypes.h)(0x5EAEAC08)
+I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5E53A4BC)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5E53A4BC)
+I (gpio.h)(0x5C161C93)
+I (sysctl.h)(0x5D089DC3)
+I (hw_memmap.h)(0x5C161D2E)
+I (tm4c123gh6pm.h)(0x5B94E230)
+F (..\..\OsekLib\hook.c)(0x5F42929D)(-c --cpu Cortex-M4.fp.sp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I ..\..\oil -I ..\..\OsekLib-I.\RTE\_Target_1-IC:\Users\Sarea.alhariri\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Sarea.alhariri\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="530" -D_RTE_ -DTM4C123GH6PM -D_RTE_-o .\build_files\hook.o --omf_browse .\build_files\hook.crf --depend .\build_files\hook.d)
+I (..\..\OsekLib\OsTypes.h)(0x5EAEAC08)
+I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5E53A4BC)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5E53A4BC)

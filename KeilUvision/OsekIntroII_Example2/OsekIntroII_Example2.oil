@@ -1,0 +1,51 @@
+CPU CORTEX-M4 {
+      OS S_OSEK {
+		   STATUS = EXTENDED ;
+		   STARTUPHOOK = FALSE;
+		   ERRORHOOK = FALSE;
+		   STACKOVERFLOWHOOK = FALSE;
+		   SHUTDOWNHOOK = FALSE;
+		   PRETASKHOOK = FALSE;
+		   POSTTASKHOOK = FALSE;
+		   USEGETSERVICEID = FALSE;
+		   USEPARAMETERACCESS = FALSE;
+		   USERESSCHEDULER = FALSE;
+		   SYSTEMTICKMS = 10 ; 
+      };
+      TASK AppTask_Periodic {
+         PRIORITY = 10;
+         SCHEDULE = FULL;
+         ACTIVATION = 1;
+         AUTOSTART = FALSE
+         STACKSIZE = 50;
+      };
+      TASK AppTask_Aperiodic {
+         PRIORITY = 12;
+         SCHEDULE = FULL;
+         ACTIVATION = 1;
+         AUTOSTART = FALSE
+         STACKSIZE = 50;
+      };        
+      ALARM Alrm_Periodic {
+         COUNTER = MainCounter;
+         ACTION = ACTIVATETASK  {
+            TASK = AppTask_Periodic;
+         };
+         AUTOSTART = TRUE {
+            ALARMTIME = 200; 
+            CYCLETIME = 50; 
+         };
+      }
+      ALARM Alrm_RelativeActivation{
+         COUNTER = MainCounter;
+         ACTION = ACTIVATETASK  {
+            TASK = AppTask_Aperiodic;
+         };
+         AUTOSTART = FALSE
+      }
+      COUNTER MainCounter {
+         MINCYCLE = 1;
+         MAXALLOWEDVALUE = 0xFFFFFFFF;
+         TICKSPERBASE = 1;
+	};
+};

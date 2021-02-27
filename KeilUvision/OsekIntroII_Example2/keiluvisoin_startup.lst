@@ -1,0 +1,2612 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;/******************************************************
+                       ********************//**
+    2 00000000         ; * @file     startup_TM4C123.s
+    3 00000000         ; * @brief    CMSIS Cortex-M4 Core Device Startup File f
+                       or
+    4 00000000         ; *           TI Tiva TM4C123 Blizzard Class Device
+    5 00000000         ; * @version  V1.00
+    6 00000000         ; * @date     15. May 2013
+    7 00000000         ; *
+    8 00000000         ; * @note
+    9 00000000         ; * Copyright (C) 2011 ARM Limited. All rights reserved.
+                       
+   10 00000000         ; *
+   11 00000000         ; * @par
+   12 00000000         ; * ARM Limited (ARM) is supplying this software for use
+                        with Cortex-M
+   13 00000000         ; * processor based microcontrollers.  This file can be 
+                       freely distributed
+   14 00000000         ; * within development tools that are supporting such AR
+                       M based processors.
+   15 00000000         ; *
+   16 00000000         ; * @par
+   17 00000000         ; * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, W
+                       HETHER EXPRESS, IMPLIED
+   18 00000000         ; * OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED
+                        WARRANTIES OF
+   19 00000000         ; * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+                        APPLY TO THIS SOFTWARE.
+   20 00000000         ; * ARM SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR S
+                       PECIAL, INCIDENTAL, OR
+   21 00000000         ; * CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+   22 00000000         ; *
+   23 00000000         ; ******************************************************
+                       ************************/
+   24 00000000         ;/*
+   25 00000000         ;//-------- <<< Use Configuration Wizard in Context Menu
+                        >>> ------------------
+   26 00000000         ;*/
+   27 00000000         
+   28 00000000         
+   29 00000000         ; <h> Stack Configuration
+   30 00000000         ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
+   31 00000000         ; </h>
+   32 00000000         
+   33 00000000 00000200 
+                       Stack_Size
+                               EQU              0x00000200
+   34 00000000         
+   35 00000000                 AREA             STACK, NOINIT, READWRITE, ALIGN
+=3
+   36 00000000         Stack_Mem
+                               SPACE            Stack_Size
+   37 00000200         __initial_sp
+   38 00000200         
+   39 00000200         
+   40 00000200         ; <h> Heap Configuration
+   41 00000200         ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
+   42 00000200         ; </h>
+   43 00000200         
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   44 00000200 00000000 
+                       Heap_Size
+                               EQU              0x00000000
+   45 00000200         
+   46 00000200                 AREA             HEAP, NOINIT, READWRITE, ALIGN=
+3
+   47 00000000         __heap_base
+   48 00000000         Heap_Mem
+                               SPACE            Heap_Size
+   49 00000000         __heap_limit
+   50 00000000         
+   51 00000000         
+   52 00000000                 PRESERVE8
+   53 00000000                 THUMB
+   54 00000000         
+   55 00000000         
+   56 00000000         ; Vector Table Mapped to Address 0 at Reset
+   57 00000000         
+   58 00000000                 AREA             RESET, DATA, READONLY
+   59 00000000                 EXPORT           __Vectors
+   60 00000000                 EXPORT           __Vectors_End
+   61 00000000                 EXPORT           __Vectors_Size
+   62 00000000                 IMPORT           SVC_Dispatcher
+   63 00000000                 IMPORT           OsPort_PendSVHandler
+   64 00000000                 IMPORT           SystemTimerHandler
+   65 00000000         
+   66 00000000 00000000 
+                       __Vectors
+                               DCD              __initial_sp ; Top of Stack
+   67 00000004 00000000        DCD              Reset_Handler ; Reset Handler
+   68 00000008 00000000        DCD              NMI_Handler ; NMI Handler
+   69 0000000C 00000000        DCD              HardFault_Handler ; Hard Fault 
+                                                            Handler
+   70 00000010 00000000        DCD              MemManage_Handler 
+                                                            ; MPU Fault Handler
+                                                            
+   71 00000014 00000000        DCD              BusFault_Handler 
+                                                            ; Bus Fault Handler
+                                                            
+   72 00000018 00000000        DCD              UsageFault_Handler ; Usage Faul
+                                                            t Handler
+   73 0000001C 00000000        DCD              0           ; Reserved
+   74 00000020 00000000        DCD              0           ; Reserved
+   75 00000024 00000000        DCD              0           ; Reserved
+   76 00000028 00000000        DCD              0           ; Reserved
+   77 0000002C 00000000        DCD              SVC_Dispatcher ; SVCall Handler
+                                                            
+   78 00000030 00000000        DCD              DebugMon_Handler ; Debug Monito
+                                                            r Handler
+   79 00000034 00000000        DCD              0           ; Reserved
+   80 00000038 00000000        DCD              OsPort_PendSVHandler 
+                                                            ; PendSV Handler
+   81 0000003C 00000000        DCD              SystemTimerHandler 
+                                                            ; SysTick Handler
+   82 00000040         
+   83 00000040         ; External Interrupts
+   84 00000040         
+   85 00000040 00000000        DCD              GPIOA_Handler 
+                                                            ;   0: GPIO Port A
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+   86 00000044 00000000        DCD              GPIOB_Handler 
+                                                            ;   1: GPIO Port B
+   87 00000048 00000000        DCD              GPIOC_Handler 
+                                                            ;   2: GPIO Port C
+   88 0000004C 00000000        DCD              GPIOD_Handler 
+                                                            ;   3: GPIO Port D
+   89 00000050 00000000        DCD              GPIOE_Handler 
+                                                            ;   4: GPIO Port E
+   90 00000054 00000000        DCD              UART0_Handler ;   5: UART0 Rx a
+                                                            nd Tx
+   91 00000058 00000000        DCD              UART1_Handler ;   6: UART1 Rx a
+                                                            nd Tx
+   92 0000005C 00000000        DCD              SSI0_Handler ;   7: SSI0 Rx and
+                                                             Tx
+   93 00000060 00000000        DCD              I2C0_Handler ;   8: I2C0 Master
+                                                             and Slave
+   94 00000064 00000000        DCD              PMW0_FAULT_Handler 
+                                                            ;   9: PWM Fault
+   95 00000068 00000000        DCD              PWM0_0_Handler ;  10: PWM Gener
+                                                            ator 0
+   96 0000006C 00000000        DCD              PWM0_1_Handler ;  11: PWM Gener
+                                                            ator 1
+   97 00000070 00000000        DCD              PWM0_2_Handler ;  12: PWM Gener
+                                                            ator 2
+   98 00000074 00000000        DCD              QEI0_Handler ;  13: Quadrature 
+                                                            Encoder 0
+   99 00000078 00000000        DCD              ADC0SS0_Handler ;  14: ADC Sequ
+                                                            ence 0
+  100 0000007C 00000000        DCD              ADC0SS1_Handler ;  15: ADC Sequ
+                                                            ence 1
+  101 00000080 00000000        DCD              ADC0SS2_Handler ;  16: ADC Sequ
+                                                            ence 2
+  102 00000084 00000000        DCD              ADC0SS3_Handler ;  17: ADC Sequ
+                                                            ence 3
+  103 00000088 00000000        DCD              WDT0_Handler ;  18: Watchdog ti
+                                                            mer
+  104 0000008C 00000000        DCD              TIMER0A_Handler ;  19: Timer 0 
+                                                            subtimer A
+  105 00000090 00000000        DCD              TIMER0B_Handler ;  20: Timer 0 
+                                                            subtimer B
+  106 00000094 00000000        DCD              TIMER1A_Handler ;  21: Timer 1 
+                                                            subtimer A
+  107 00000098 00000000        DCD              TIMER1B_Handler ;  22: Timer 1 
+                                                            subtimer B
+  108 0000009C 00000000        DCD              TIMER2A_Handler ;  23: Timer 2 
+                                                            subtimer A
+  109 000000A0 00000000        DCD              TIMER2B_Handler ;  24: Timer 2 
+                                                            subtimer B
+  110 000000A4 00000000        DCD              COMP0_Handler ;  25: Analog Com
+                                                            parator 0
+  111 000000A8 00000000        DCD              COMP1_Handler ;  26: Analog Com
+                                                            parator 1
+  112 000000AC 00000000        DCD              COMP2_Handler ;  27: Analog Com
+                                                            parator 2
+  113 000000B0 00000000        DCD              SYSCTL_Handler ;  28: System Co
+                                                            ntrol (PLL, OSC, BO
+                                                            )
+  114 000000B4 00000000        DCD              FLASH_Handler ;  29: FLASH Cont
+                                                            rol
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+  115 000000B8 00000000        DCD              GPIOF_Handler 
+                                                            ;  30: GPIO Port F
+  116 000000BC 00000000        DCD              GPIOG_Handler 
+                                                            ;  31: GPIO Port G
+  117 000000C0 00000000        DCD              GPIOH_Handler 
+                                                            ;  32: GPIO Port H
+  118 000000C4 00000000        DCD              UART2_Handler ;  33: UART2 Rx a
+                                                            nd Tx
+  119 000000C8 00000000        DCD              SSI1_Handler ;  34: SSI1 Rx and
+                                                             Tx
+  120 000000CC 00000000        DCD              TIMER3A_Handler ;  35: Timer 3 
+                                                            subtimer A
+  121 000000D0 00000000        DCD              TIMER3B_Handler ;  36: Timer 3 
+                                                            subtimer B
+  122 000000D4 00000000        DCD              I2C1_Handler ;  37: I2C1 Master
+                                                             and Slave
+  123 000000D8 00000000        DCD              QEI1_Handler ;  38: Quadrature 
+                                                            Encoder 1
+  124 000000DC 00000000        DCD              CAN0_Handler ;  39: CAN0
+  125 000000E0 00000000        DCD              CAN1_Handler ;  40: CAN1
+  126 000000E4 00000000        DCD              CAN2_Handler ;  41: CAN2
+  127 000000E8 00000000        DCD              0           ;  42: Reserved
+  128 000000EC 00000000        DCD              HIB_Handler ;  43: Hibernate
+  129 000000F0 00000000        DCD              USB0_Handler ;  44: USB0
+  130 000000F4 00000000        DCD              PWM0_3_Handler ;  45: PWM Gener
+                                                            ator 3
+  131 000000F8 00000000        DCD              UDMA_Handler ;  46: uDMA Softwa
+                                                            re Transfer
+  132 000000FC 00000000        DCD              UDMAERR_Handler 
+                                                            ;  47: uDMA Error
+  133 00000100 00000000        DCD              ADC1SS0_Handler ;  48: ADC1 Seq
+                                                            uence 0
+  134 00000104 00000000        DCD              ADC1SS1_Handler ;  49: ADC1 Seq
+                                                            uence 1
+  135 00000108 00000000        DCD              ADC1SS2_Handler ;  50: ADC1 Seq
+                                                            uence 2
+  136 0000010C 00000000        DCD              ADC1SS3_Handler ;  51: ADC1 Seq
+                                                            uence 3
+  137 00000110 00000000        DCD              0           ;  52: Reserved
+  138 00000114 00000000        DCD              0           ;  53: Reserved
+  139 00000118 00000000        DCD              GPIOJ_Handler 
+                                                            ;  54: GPIO Port J
+  140 0000011C 00000000        DCD              GPIOK_Handler 
+                                                            ;  55: GPIO Port K
+  141 00000120 00000000        DCD              GPIOL_Handler 
+                                                            ;  56: GPIO Port L
+  142 00000124 00000000        DCD              SSI2_Handler ;  57: SSI2 Rx and
+                                                             Tx
+  143 00000128 00000000        DCD              SSI3_Handler ;  58: SSI3 Rx and
+                                                             Tx
+  144 0000012C 00000000        DCD              UART3_Handler ;  59: UART3 Rx a
+                                                            nd Tx
+  145 00000130 00000000        DCD              UART4_Handler ;  60: UART4 Rx a
+                                                            nd Tx
+  146 00000134 00000000        DCD              UART5_Handler ;  61: UART5 Rx a
+                                                            nd Tx
+  147 00000138 00000000        DCD              UART6_Handler ;  62: UART6 Rx a
+                                                            nd Tx
+  148 0000013C 00000000        DCD              UART7_Handler ;  63: UART7 Rx a
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+                                                            nd Tx
+  149 00000140 00000000        DCD              0           ;  64: Reserved
+  150 00000144 00000000        DCD              0           ;  65: Reserved
+  151 00000148 00000000        DCD              0           ;  66: Reserved
+  152 0000014C 00000000        DCD              0           ;  67: Reserved
+  153 00000150 00000000        DCD              I2C2_Handler ;  68: I2C2 Master
+                                                             and Slave
+  154 00000154 00000000        DCD              I2C3_Handler ;  69: I2C3 Master
+                                                             and Slave
+  155 00000158 00000000        DCD              TIMER4A_Handler ;  70: Timer 4 
+                                                            subtimer A
+  156 0000015C 00000000        DCD              TIMER4B_Handler ;  71: Timer 4 
+                                                            subtimer B
+  157 00000160 00000000        DCD              0           ;  72: Reserved
+  158 00000164 00000000        DCD              0           ;  73: Reserved
+  159 00000168 00000000        DCD              0           ;  74: Reserved
+  160 0000016C 00000000        DCD              0           ;  75: Reserved
+  161 00000170 00000000        DCD              0           ;  76: Reserved
+  162 00000174 00000000        DCD              0           ;  77: Reserved
+  163 00000178 00000000        DCD              0           ;  78: Reserved
+  164 0000017C 00000000        DCD              0           ;  79: Reserved
+  165 00000180 00000000        DCD              0           ;  80: Reserved
+  166 00000184 00000000        DCD              0           ;  81: Reserved
+  167 00000188 00000000        DCD              0           ;  82: Reserved
+  168 0000018C 00000000        DCD              0           ;  83: Reserved
+  169 00000190 00000000        DCD              0           ;  84: Reserved
+  170 00000194 00000000        DCD              0           ;  85: Reserved
+  171 00000198 00000000        DCD              0           ;  86: Reserved
+  172 0000019C 00000000        DCD              0           ;  87: Reserved
+  173 000001A0 00000000        DCD              0           ;  88: Reserved
+  174 000001A4 00000000        DCD              0           ;  89: Reserved
+  175 000001A8 00000000        DCD              0           ;  90: Reserved
+  176 000001AC 00000000        DCD              0           ;  91: Reserved
+  177 000001B0 00000000        DCD              TIMER5A_Handler ;  92: Timer 5 
+                                                            subtimer A
+  178 000001B4 00000000        DCD              TIMER5B_Handler ;  93: Timer 5 
+                                                            subtimer B
+  179 000001B8 00000000        DCD              WTIMER0A_Handler ;  94: Wide Ti
+                                                            mer 0 subtimer A
+  180 000001BC 00000000        DCD              WTIMER0B_Handler ;  95: Wide Ti
+                                                            mer 0 subtimer B
+  181 000001C0 00000000        DCD              WTIMER1A_Handler ;  96: Wide Ti
+                                                            mer 1 subtimer A
+  182 000001C4 00000000        DCD              WTIMER1B_Handler ;  97: Wide Ti
+                                                            mer 1 subtimer B
+  183 000001C8 00000000        DCD              WTIMER2A_Handler ;  98: Wide Ti
+                                                            mer 2 subtimer A
+  184 000001CC 00000000        DCD              WTIMER2B_Handler ;  99: Wide Ti
+                                                            mer 2 subtimer B
+  185 000001D0 00000000        DCD              WTIMER3A_Handler ; 100: Wide Ti
+                                                            mer 3 subtimer A
+  186 000001D4 00000000        DCD              WTIMER3B_Handler ; 101: Wide Ti
+                                                            mer 3 subtimer B
+  187 000001D8 00000000        DCD              WTIMER4A_Handler ; 102: Wide Ti
+                                                            mer 4 subtimer A
+  188 000001DC 00000000        DCD              WTIMER4B_Handler ; 103: Wide Ti
+                                                            mer 4 subtimer B
+  189 000001E0 00000000        DCD              WTIMER5A_Handler ; 104: Wide Ti
+                                                            mer 5 subtimer A
+
+
+
+ARM Macro Assembler    Page 6 
+
+
+  190 000001E4 00000000        DCD              WTIMER5B_Handler ; 105: Wide Ti
+                                                            mer 5 subtimer B
+  191 000001E8 00000000        DCD              FPU_Handler ; 106: FPU
+  192 000001EC 00000000        DCD              0           ; 107: Reserved
+  193 000001F0 00000000        DCD              0           ; 108: Reserved
+  194 000001F4 00000000        DCD              I2C4_Handler ; 109: I2C4 Master
+                                                             and Slave
+  195 000001F8 00000000        DCD              I2C5_Handler ; 110: I2C5 Master
+                                                             and Slave
+  196 000001FC 00000000        DCD              GPIOM_Handler 
+                                                            ; 111: GPIO Port M
+  197 00000200 00000000        DCD              GPION_Handler 
+                                                            ; 112: GPIO Port N
+  198 00000204 00000000        DCD              QEI2_Handler ; 113: Quadrature 
+                                                            Encoder 2
+  199 00000208 00000000        DCD              0           ; 114: Reserved
+  200 0000020C 00000000        DCD              0           ; 115: Reserved
+  201 00000210 00000000        DCD              GPIOP0_Handler ; 116: GPIO Port
+                                                             P (Summary or P0)
+  202 00000214 00000000        DCD              GPIOP1_Handler 
+                                                            ; 117: GPIO Port P1
+                                                            
+  203 00000218 00000000        DCD              GPIOP2_Handler 
+                                                            ; 118: GPIO Port P2
+                                                            
+  204 0000021C 00000000        DCD              GPIOP3_Handler 
+                                                            ; 119: GPIO Port P3
+                                                            
+  205 00000220 00000000        DCD              GPIOP4_Handler 
+                                                            ; 120: GPIO Port P4
+                                                            
+  206 00000224 00000000        DCD              GPIOP5_Handler 
+                                                            ; 121: GPIO Port P5
+                                                            
+  207 00000228 00000000        DCD              GPIOP6_Handler 
+                                                            ; 122: GPIO Port P6
+                                                            
+  208 0000022C 00000000        DCD              GPIOP7_Handler 
+                                                            ; 123: GPIO Port P7
+                                                            
+  209 00000230 00000000        DCD              GPIOQ0_Handler ; 124: GPIO Port
+                                                             Q (Summary or Q0)
+  210 00000234 00000000        DCD              GPIOQ1_Handler 
+                                                            ; 125: GPIO Port Q1
+                                                            
+  211 00000238 00000000        DCD              GPIOQ2_Handler 
+                                                            ; 126: GPIO Port Q2
+                                                            
+  212 0000023C 00000000        DCD              GPIOQ3_Handler 
+                                                            ; 127: GPIO Port Q3
+                                                            
+  213 00000240 00000000        DCD              GPIOQ4_Handler 
+                                                            ; 128: GPIO Port Q4
+                                                            
+  214 00000244 00000000        DCD              GPIOQ5_Handler 
+                                                            ; 129: GPIO Port Q5
+                                                            
+  215 00000248 00000000        DCD              GPIOQ6_Handler 
+                                                            ; 130: GPIO Port Q6
+
+
+
+ARM Macro Assembler    Page 7 
+
+
+                                                            
+  216 0000024C 00000000        DCD              GPIOQ7_Handler 
+                                                            ; 131: GPIO Port Q7
+                                                            
+  217 00000250 00000000        DCD              GPIOR_Handler 
+                                                            ; 132: GPIO Port R
+  218 00000254 00000000        DCD              GPIOS_Handler 
+                                                            ; 133: GPIO Port S
+  219 00000258 00000000        DCD              PMW1_0_Handler ; 134: PWM 1 Gen
+                                                            erator 0
+  220 0000025C 00000000        DCD              PWM1_1_Handler ; 135: PWM 1 Gen
+                                                            erator 1
+  221 00000260 00000000        DCD              PWM1_2_Handler ; 136: PWM 1 Gen
+                                                            erator 2
+  222 00000264 00000000        DCD              PWM1_3_Handler ; 137: PWM 1 Gen
+                                                            erator 3
+  223 00000268 00000000        DCD              PWM1_FAULT_Handler 
+                                                            ; 138: PWM 1 Fault
+  224 0000026C         
+  225 0000026C         __Vectors_End
+  226 0000026C         
+  227 0000026C 0000026C 
+                       __Vectors_Size
+                               EQU              __Vectors_End - __Vectors
+  228 0000026C         
+  229 0000026C                 AREA             |.text|, CODE, READONLY
+  230 00000000         
+  231 00000000         
+  232 00000000         ; Reset Handler
+  233 00000000         
+  234 00000000         Reset_Handler
+                               PROC
+  235 00000000                 EXPORT           Reset_Handler             [WEAK
+]
+  236 00000000                 IMPORT           SystemInit
+  237 00000000                 IMPORT           __main
+  238 00000000 483C            LDR              R0, =SystemInit
+  239 00000002 4780            BLX              R0
+  240 00000004 483C            LDR              R0, =__main
+  241 00000006 4700            BX               R0
+  242 00000008                 ENDP
+  243 00000008         
+  244 00000008         
+  245 00000008         ; Dummy Exception Handlers (infinite loops which can be 
+                       modified)
+  246 00000008         
+  247 00000008         NMI_Handler
+                               PROC
+  248 00000008                 EXPORT           NMI_Handler               [WEAK
+]
+  249 00000008 E7FE            B                .
+  250 0000000A                 ENDP
+  252 0000000A         HardFault_Handler
+                               PROC
+  253 0000000A                 EXPORT           HardFault_Handler         [WEAK
+]
+  254 0000000A E7FE            B                .
+  255 0000000C                 ENDP
+  257 0000000C         MemManage_Handler
+
+
+
+ARM Macro Assembler    Page 8 
+
+
+                               PROC
+  258 0000000C                 EXPORT           MemManage_Handler         [WEAK
+]
+  259 0000000C E7FE            B                .
+  260 0000000E                 ENDP
+  262 0000000E         BusFault_Handler
+                               PROC
+  263 0000000E                 EXPORT           BusFault_Handler          [WEAK
+]
+  264 0000000E E7FE            B                .
+  265 00000010                 ENDP
+  267 00000010         UsageFault_Handler
+                               PROC
+  268 00000010                 EXPORT           UsageFault_Handler        [WEAK
+]
+  269 00000010 E7FE            B                .
+  270 00000012                 ENDP
+  272 00000012         SVC_Handler
+                               PROC
+  273 00000012                 EXPORT           SVC_Handler        [WEAK]
+  274 00000012 E7FE            B                .
+  275 00000014                 ENDP
+  277 00000014         DebugMon_Handler
+                               PROC
+  278 00000014                 EXPORT           DebugMon_Handler          [WEAK
+]
+  279 00000014 E7FE            B                .
+  280 00000016                 ENDP
+  282 00000016         PendSV_Handler
+                               PROC
+  283 00000016                 EXPORT           PendSV_Handler            [WEAK
+]
+  284 00000016 E7FE            B                .
+  285 00000018                 ENDP
+  287 00000018         SysTick_Handler
+                               PROC
+  288 00000018                 EXPORT           SysTick_Handler [WEAK]
+  289 00000018 E7FE            B                .
+  290 0000001A                 ENDP
+  292 0000001A         GPIOA_Handler
+                               PROC
+  293 0000001A                 EXPORT           GPIOA_Handler [WEAK]
+  294 0000001A E7FE            B                .
+  295 0000001C                 ENDP
+  296 0000001C         
+  298 0000001C         GPIOB_Handler
+                               PROC
+  299 0000001C                 EXPORT           GPIOB_Handler [WEAK]
+  300 0000001C E7FE            B                .
+  301 0000001E                 ENDP
+  302 0000001E         
+  304 0000001E         GPIOC_Handler
+                               PROC
+  305 0000001E                 EXPORT           GPIOC_Handler [WEAK]
+  306 0000001E E7FE            B                .
+  307 00000020                 ENDP
+  308 00000020         
+  310 00000020         GPIOD_Handler
+                               PROC
+
+
+
+ARM Macro Assembler    Page 9 
+
+
+  311 00000020                 EXPORT           GPIOD_Handler [WEAK]
+  312 00000020 E7FE            B                .
+  313 00000022                 ENDP
+  314 00000022         
+  316 00000022         GPIOE_Handler
+                               PROC
+  317 00000022                 EXPORT           GPIOE_Handler [WEAK]
+  318 00000022 E7FE            B                .
+  319 00000024                 ENDP
+  320 00000024         
+  322 00000024         UART0_Handler
+                               PROC
+  323 00000024                 EXPORT           UART0_Handler [WEAK]
+  324 00000024 E7FE            B                .
+  325 00000026                 ENDP
+  326 00000026         
+  328 00000026         UART1_Handler
+                               PROC
+  329 00000026                 EXPORT           UART1_Handler [WEAK]
+  330 00000026 E7FE            B                .
+  331 00000028                 ENDP
+  332 00000028         
+  334 00000028         SSI0_Handler
+                               PROC
+  335 00000028                 EXPORT           SSI0_Handler [WEAK]
+  336 00000028 E7FE            B                .
+  337 0000002A                 ENDP
+  338 0000002A         
+  340 0000002A         I2C0_Handler
+                               PROC
+  341 0000002A                 EXPORT           I2C0_Handler [WEAK]
+  342 0000002A E7FE            B                .
+  343 0000002C                 ENDP
+  344 0000002C         
+  346 0000002C         PMW0_FAULT_Handler
+                               PROC
+  347 0000002C                 EXPORT           PMW0_FAULT_Handler [WEAK]
+  348 0000002C E7FE            B                .
+  349 0000002E                 ENDP
+  350 0000002E         
+  352 0000002E         PWM0_0_Handler
+                               PROC
+  353 0000002E                 EXPORT           PWM0_0_Handler [WEAK]
+  354 0000002E E7FE            B                .
+  355 00000030                 ENDP
+  356 00000030         
+  358 00000030         PWM0_1_Handler
+                               PROC
+  359 00000030                 EXPORT           PWM0_1_Handler [WEAK]
+  360 00000030 E7FE            B                .
+  361 00000032                 ENDP
+  362 00000032         
+  364 00000032         PWM0_2_Handler
+                               PROC
+  365 00000032                 EXPORT           PWM0_2_Handler [WEAK]
+  366 00000032 E7FE            B                .
+  367 00000034                 ENDP
+  368 00000034         
+  370 00000034         QEI0_Handler
+
+
+
+ARM Macro Assembler    Page 10 
+
+
+                               PROC
+  371 00000034                 EXPORT           QEI0_Handler [WEAK]
+  372 00000034 E7FE            B                .
+  373 00000036                 ENDP
+  374 00000036         
+  376 00000036         ADC0SS0_Handler
+                               PROC
+  377 00000036                 EXPORT           ADC0SS0_Handler [WEAK]
+  378 00000036 E7FE            B                .
+  379 00000038                 ENDP
+  380 00000038         
+  382 00000038         ADC0SS1_Handler
+                               PROC
+  383 00000038                 EXPORT           ADC0SS1_Handler [WEAK]
+  384 00000038 E7FE            B                .
+  385 0000003A                 ENDP
+  386 0000003A         
+  388 0000003A         ADC0SS2_Handler
+                               PROC
+  389 0000003A                 EXPORT           ADC0SS2_Handler [WEAK]
+  390 0000003A E7FE            B                .
+  391 0000003C                 ENDP
+  392 0000003C         
+  394 0000003C         ADC0SS3_Handler
+                               PROC
+  395 0000003C                 EXPORT           ADC0SS3_Handler [WEAK]
+  396 0000003C E7FE            B                .
+  397 0000003E                 ENDP
+  398 0000003E         
+  400 0000003E         WDT0_Handler
+                               PROC
+  401 0000003E                 EXPORT           WDT0_Handler [WEAK]
+  402 0000003E E7FE            B                .
+  403 00000040                 ENDP
+  404 00000040         
+  406 00000040         TIMER0A_Handler
+                               PROC
+  407 00000040                 EXPORT           TIMER0A_Handler [WEAK]
+  408 00000040 E7FE            B                .
+  409 00000042                 ENDP
+  410 00000042         
+  412 00000042         TIMER0B_Handler
+                               PROC
+  413 00000042                 EXPORT           TIMER0B_Handler [WEAK]
+  414 00000042 E7FE            B                .
+  415 00000044                 ENDP
+  416 00000044         
+  418 00000044         TIMER1A_Handler
+                               PROC
+  419 00000044                 EXPORT           TIMER1A_Handler [WEAK]
+  420 00000044 E7FE            B                .
+  421 00000046                 ENDP
+  422 00000046         
+  424 00000046         TIMER1B_Handler
+                               PROC
+  425 00000046                 EXPORT           TIMER1B_Handler [WEAK]
+  426 00000046 E7FE            B                .
+  427 00000048                 ENDP
+  428 00000048         
+
+
+
+ARM Macro Assembler    Page 11 
+
+
+  430 00000048         TIMER2A_Handler
+                               PROC
+  431 00000048                 EXPORT           TIMER2A_Handler [WEAK]
+  432 00000048 E7FE            B                .
+  433 0000004A                 ENDP
+  434 0000004A         
+  436 0000004A         TIMER2B_Handler
+                               PROC
+  437 0000004A                 EXPORT           TIMER2B_Handler [WEAK]
+  438 0000004A E7FE            B                .
+  439 0000004C                 ENDP
+  440 0000004C         
+  442 0000004C         COMP0_Handler
+                               PROC
+  443 0000004C                 EXPORT           COMP0_Handler [WEAK]
+  444 0000004C E7FE            B                .
+  445 0000004E                 ENDP
+  446 0000004E         
+  448 0000004E         COMP1_Handler
+                               PROC
+  449 0000004E                 EXPORT           COMP1_Handler [WEAK]
+  450 0000004E E7FE            B                .
+  451 00000050                 ENDP
+  452 00000050         
+  454 00000050         COMP2_Handler
+                               PROC
+  455 00000050                 EXPORT           COMP2_Handler [WEAK]
+  456 00000050 E7FE            B                .
+  457 00000052                 ENDP
+  458 00000052         
+  460 00000052         SYSCTL_Handler
+                               PROC
+  461 00000052                 EXPORT           SYSCTL_Handler [WEAK]
+  462 00000052 E7FE            B                .
+  463 00000054                 ENDP
+  464 00000054         
+  466 00000054         FLASH_Handler
+                               PROC
+  467 00000054                 EXPORT           FLASH_Handler [WEAK]
+  468 00000054 E7FE            B                .
+  469 00000056                 ENDP
+  470 00000056         
+  472 00000056         GPIOF_Handler
+                               PROC
+  473 00000056                 EXPORT           GPIOF_Handler [WEAK]
+  474 00000056 E7FE            B                .
+  475 00000058                 ENDP
+  476 00000058         
+  478 00000058         GPIOG_Handler
+                               PROC
+  479 00000058                 EXPORT           GPIOG_Handler [WEAK]
+  480 00000058 E7FE            B                .
+  481 0000005A                 ENDP
+  482 0000005A         
+  484 0000005A         GPIOH_Handler
+                               PROC
+  485 0000005A                 EXPORT           GPIOH_Handler [WEAK]
+  486 0000005A E7FE            B                .
+  487 0000005C                 ENDP
+
+
+
+ARM Macro Assembler    Page 12 
+
+
+  488 0000005C         
+  490 0000005C         UART2_Handler
+                               PROC
+  491 0000005C                 EXPORT           UART2_Handler [WEAK]
+  492 0000005C E7FE            B                .
+  493 0000005E                 ENDP
+  494 0000005E         
+  496 0000005E         SSI1_Handler
+                               PROC
+  497 0000005E                 EXPORT           SSI1_Handler [WEAK]
+  498 0000005E E7FE            B                .
+  499 00000060                 ENDP
+  500 00000060         
+  502 00000060         TIMER3A_Handler
+                               PROC
+  503 00000060                 EXPORT           TIMER3A_Handler [WEAK]
+  504 00000060 E7FE            B                .
+  505 00000062                 ENDP
+  506 00000062         
+  508 00000062         TIMER3B_Handler
+                               PROC
+  509 00000062                 EXPORT           TIMER3B_Handler [WEAK]
+  510 00000062 E7FE            B                .
+  511 00000064                 ENDP
+  512 00000064         
+  514 00000064         I2C1_Handler
+                               PROC
+  515 00000064                 EXPORT           I2C1_Handler [WEAK]
+  516 00000064 E7FE            B                .
+  517 00000066                 ENDP
+  518 00000066         
+  520 00000066         QEI1_Handler
+                               PROC
+  521 00000066                 EXPORT           QEI1_Handler [WEAK]
+  522 00000066 E7FE            B                .
+  523 00000068                 ENDP
+  524 00000068         
+  526 00000068         CAN0_Handler
+                               PROC
+  527 00000068                 EXPORT           CAN0_Handler [WEAK]
+  528 00000068 E7FE            B                .
+  529 0000006A                 ENDP
+  530 0000006A         
+  532 0000006A         CAN1_Handler
+                               PROC
+  533 0000006A                 EXPORT           CAN1_Handler [WEAK]
+  534 0000006A E7FE            B                .
+  535 0000006C                 ENDP
+  536 0000006C         
+  538 0000006C         CAN2_Handler
+                               PROC
+  539 0000006C                 EXPORT           CAN2_Handler [WEAK]
+  540 0000006C E7FE            B                .
+  541 0000006E                 ENDP
+  542 0000006E         
+  544 0000006E         HIB_Handler
+                               PROC
+  545 0000006E                 EXPORT           HIB_Handler [WEAK]
+  546 0000006E E7FE            B                .
+
+
+
+ARM Macro Assembler    Page 13 
+
+
+  547 00000070                 ENDP
+  548 00000070         
+  550 00000070         USB0_Handler
+                               PROC
+  551 00000070                 EXPORT           USB0_Handler [WEAK]
+  552 00000070 E7FE            B                .
+  553 00000072                 ENDP
+  554 00000072         
+  556 00000072         PWM0_3_Handler
+                               PROC
+  557 00000072                 EXPORT           PWM0_3_Handler [WEAK]
+  558 00000072 E7FE            B                .
+  559 00000074                 ENDP
+  560 00000074         
+  562 00000074         UDMA_Handler
+                               PROC
+  563 00000074                 EXPORT           UDMA_Handler [WEAK]
+  564 00000074 E7FE            B                .
+  565 00000076                 ENDP
+  566 00000076         
+  568 00000076         UDMAERR_Handler
+                               PROC
+  569 00000076                 EXPORT           UDMAERR_Handler [WEAK]
+  570 00000076 E7FE            B                .
+  571 00000078                 ENDP
+  572 00000078         
+  574 00000078         ADC1SS0_Handler
+                               PROC
+  575 00000078                 EXPORT           ADC1SS0_Handler [WEAK]
+  576 00000078 E7FE            B                .
+  577 0000007A                 ENDP
+  578 0000007A         
+  580 0000007A         ADC1SS1_Handler
+                               PROC
+  581 0000007A                 EXPORT           ADC1SS1_Handler [WEAK]
+  582 0000007A E7FE            B                .
+  583 0000007C                 ENDP
+  584 0000007C         
+  586 0000007C         ADC1SS2_Handler
+                               PROC
+  587 0000007C                 EXPORT           ADC1SS2_Handler [WEAK]
+  588 0000007C E7FE            B                .
+  589 0000007E                 ENDP
+  590 0000007E         
+  592 0000007E         ADC1SS3_Handler
+                               PROC
+  593 0000007E                 EXPORT           ADC1SS3_Handler [WEAK]
+  594 0000007E E7FE            B                .
+  595 00000080                 ENDP
+  596 00000080         
+  598 00000080         GPIOJ_Handler
+                               PROC
+  599 00000080                 EXPORT           GPIOJ_Handler [WEAK]
+  600 00000080 E7FE            B                .
+  601 00000082                 ENDP
+  602 00000082         
+  604 00000082         GPIOK_Handler
+                               PROC
+  605 00000082                 EXPORT           GPIOK_Handler [WEAK]
+
+
+
+ARM Macro Assembler    Page 14 
+
+
+  606 00000082 E7FE            B                .
+  607 00000084                 ENDP
+  608 00000084         
+  610 00000084         GPIOL_Handler
+                               PROC
+  611 00000084                 EXPORT           GPIOL_Handler [WEAK]
+  612 00000084 E7FE            B                .
+  613 00000086                 ENDP
+  614 00000086         
+  616 00000086         SSI2_Handler
+                               PROC
+  617 00000086                 EXPORT           SSI2_Handler [WEAK]
+  618 00000086 E7FE            B                .
+  619 00000088                 ENDP
+  620 00000088         
+  622 00000088         SSI3_Handler
+                               PROC
+  623 00000088                 EXPORT           SSI3_Handler [WEAK]
+  624 00000088 E7FE            B                .
+  625 0000008A                 ENDP
+  626 0000008A         
+  628 0000008A         UART3_Handler
+                               PROC
+  629 0000008A                 EXPORT           UART3_Handler [WEAK]
+  630 0000008A E7FE            B                .
+  631 0000008C                 ENDP
+  632 0000008C         
+  634 0000008C         UART4_Handler
+                               PROC
+  635 0000008C                 EXPORT           UART4_Handler [WEAK]
+  636 0000008C E7FE            B                .
+  637 0000008E                 ENDP
+  638 0000008E         
+  640 0000008E         UART5_Handler
+                               PROC
+  641 0000008E                 EXPORT           UART5_Handler [WEAK]
+  642 0000008E E7FE            B                .
+  643 00000090                 ENDP
+  644 00000090         
+  646 00000090         UART6_Handler
+                               PROC
+  647 00000090                 EXPORT           UART6_Handler [WEAK]
+  648 00000090 E7FE            B                .
+  649 00000092                 ENDP
+  650 00000092         
+  652 00000092         UART7_Handler
+                               PROC
+  653 00000092                 EXPORT           UART7_Handler [WEAK]
+  654 00000092 E7FE            B                .
+  655 00000094                 ENDP
+  656 00000094         
+  658 00000094         I2C2_Handler
+                               PROC
+  659 00000094                 EXPORT           I2C2_Handler [WEAK]
+  660 00000094 E7FE            B                .
+  661 00000096                 ENDP
+  662 00000096         
+  664 00000096         I2C3_Handler
+                               PROC
+
+
+
+ARM Macro Assembler    Page 15 
+
+
+  665 00000096                 EXPORT           I2C3_Handler [WEAK]
+  666 00000096 E7FE            B                .
+  667 00000098                 ENDP
+  668 00000098         
+  670 00000098         TIMER4A_Handler
+                               PROC
+  671 00000098                 EXPORT           TIMER4A_Handler [WEAK]
+  672 00000098 E7FE            B                .
+  673 0000009A                 ENDP
+  674 0000009A         
+  676 0000009A         TIMER4B_Handler
+                               PROC
+  677 0000009A                 EXPORT           TIMER4B_Handler [WEAK]
+  678 0000009A E7FE            B                .
+  679 0000009C                 ENDP
+  680 0000009C         
+  682 0000009C         TIMER5A_Handler
+                               PROC
+  683 0000009C                 EXPORT           TIMER5A_Handler [WEAK]
+  684 0000009C E7FE            B                .
+  685 0000009E                 ENDP
+  686 0000009E         
+  688 0000009E         TIMER5B_Handler
+                               PROC
+  689 0000009E                 EXPORT           TIMER5B_Handler [WEAK]
+  690 0000009E E7FE            B                .
+  691 000000A0                 ENDP
+  692 000000A0         
+  694 000000A0         WTIMER0A_Handler
+                               PROC
+  695 000000A0                 EXPORT           WTIMER0A_Handler [WEAK]
+  696 000000A0 E7FE            B                .
+  697 000000A2                 ENDP
+  698 000000A2         
+  700 000000A2         WTIMER0B_Handler
+                               PROC
+  701 000000A2                 EXPORT           WTIMER0B_Handler [WEAK]
+  702 000000A2 E7FE            B                .
+  703 000000A4                 ENDP
+  704 000000A4         
+  706 000000A4         WTIMER1A_Handler
+                               PROC
+  707 000000A4                 EXPORT           WTIMER1A_Handler [WEAK]
+  708 000000A4 E7FE            B                .
+  709 000000A6                 ENDP
+  710 000000A6         
+  712 000000A6         WTIMER1B_Handler
+                               PROC
+  713 000000A6                 EXPORT           WTIMER1B_Handler [WEAK]
+  714 000000A6 E7FE            B                .
+  715 000000A8                 ENDP
+  716 000000A8         
+  718 000000A8         WTIMER2A_Handler
+                               PROC
+  719 000000A8                 EXPORT           WTIMER2A_Handler [WEAK]
+  720 000000A8 E7FE            B                .
+  721 000000AA                 ENDP
+  722 000000AA         
+  724 000000AA         WTIMER2B_Handler
+
+
+
+ARM Macro Assembler    Page 16 
+
+
+                               PROC
+  725 000000AA                 EXPORT           WTIMER2B_Handler [WEAK]
+  726 000000AA E7FE            B                .
+  727 000000AC                 ENDP
+  728 000000AC         
+  730 000000AC         WTIMER3A_Handler
+                               PROC
+  731 000000AC                 EXPORT           WTIMER3A_Handler [WEAK]
+  732 000000AC E7FE            B                .
+  733 000000AE                 ENDP
+  734 000000AE         
+  736 000000AE         WTIMER3B_Handler
+                               PROC
+  737 000000AE                 EXPORT           WTIMER3B_Handler [WEAK]
+  738 000000AE E7FE            B                .
+  739 000000B0                 ENDP
+  740 000000B0         
+  742 000000B0         WTIMER4A_Handler
+                               PROC
+  743 000000B0                 EXPORT           WTIMER4A_Handler [WEAK]
+  744 000000B0 E7FE            B                .
+  745 000000B2                 ENDP
+  746 000000B2         
+  748 000000B2         WTIMER4B_Handler
+                               PROC
+  749 000000B2                 EXPORT           WTIMER4B_Handler [WEAK]
+  750 000000B2 E7FE            B                .
+  751 000000B4                 ENDP
+  752 000000B4         
+  754 000000B4         WTIMER5A_Handler
+                               PROC
+  755 000000B4                 EXPORT           WTIMER5A_Handler [WEAK]
+  756 000000B4 E7FE            B                .
+  757 000000B6                 ENDP
+  758 000000B6         
+  760 000000B6         WTIMER5B_Handler
+                               PROC
+  761 000000B6                 EXPORT           WTIMER5B_Handler [WEAK]
+  762 000000B6 E7FE            B                .
+  763 000000B8                 ENDP
+  764 000000B8         
+  766 000000B8         FPU_Handler
+                               PROC
+  767 000000B8                 EXPORT           FPU_Handler [WEAK]
+  768 000000B8 E7FE            B                .
+  769 000000BA                 ENDP
+  770 000000BA         
+  772 000000BA         I2C4_Handler
+                               PROC
+  773 000000BA                 EXPORT           I2C4_Handler [WEAK]
+  774 000000BA E7FE            B                .
+  775 000000BC                 ENDP
+  776 000000BC         
+  778 000000BC         I2C5_Handler
+                               PROC
+  779 000000BC                 EXPORT           I2C5_Handler [WEAK]
+  780 000000BC E7FE            B                .
+  781 000000BE                 ENDP
+  782 000000BE         
+
+
+
+ARM Macro Assembler    Page 17 
+
+
+  784 000000BE         GPIOM_Handler
+                               PROC
+  785 000000BE                 EXPORT           GPIOM_Handler [WEAK]
+  786 000000BE E7FE            B                .
+  787 000000C0                 ENDP
+  788 000000C0         
+  790 000000C0         GPION_Handler
+                               PROC
+  791 000000C0                 EXPORT           GPION_Handler [WEAK]
+  792 000000C0 E7FE            B                .
+  793 000000C2                 ENDP
+  794 000000C2         
+  796 000000C2         QEI2_Handler
+                               PROC
+  797 000000C2                 EXPORT           QEI2_Handler [WEAK]
+  798 000000C2 E7FE            B                .
+  799 000000C4                 ENDP
+  800 000000C4         
+  802 000000C4         GPIOP0_Handler
+                               PROC
+  803 000000C4                 EXPORT           GPIOP0_Handler [WEAK]
+  804 000000C4 E7FE            B                .
+  805 000000C6                 ENDP
+  806 000000C6         
+  808 000000C6         GPIOP1_Handler
+                               PROC
+  809 000000C6                 EXPORT           GPIOP1_Handler [WEAK]
+  810 000000C6 E7FE            B                .
+  811 000000C8                 ENDP
+  812 000000C8         
+  814 000000C8         GPIOP2_Handler
+                               PROC
+  815 000000C8                 EXPORT           GPIOP2_Handler [WEAK]
+  816 000000C8 E7FE            B                .
+  817 000000CA                 ENDP
+  818 000000CA         
+  820 000000CA         GPIOP3_Handler
+                               PROC
+  821 000000CA                 EXPORT           GPIOP3_Handler [WEAK]
+  822 000000CA E7FE            B                .
+  823 000000CC                 ENDP
+  824 000000CC         
+  826 000000CC         GPIOP4_Handler
+                               PROC
+  827 000000CC                 EXPORT           GPIOP4_Handler [WEAK]
+  828 000000CC E7FE            B                .
+  829 000000CE                 ENDP
+  830 000000CE         
+  832 000000CE         GPIOP5_Handler
+                               PROC
+  833 000000CE                 EXPORT           GPIOP5_Handler [WEAK]
+  834 000000CE E7FE            B                .
+  835 000000D0                 ENDP
+  836 000000D0         
+  838 000000D0         GPIOP6_Handler
+                               PROC
+  839 000000D0                 EXPORT           GPIOP6_Handler [WEAK]
+  840 000000D0 E7FE            B                .
+  841 000000D2                 ENDP
+
+
+
+ARM Macro Assembler    Page 18 
+
+
+  842 000000D2         
+  844 000000D2         GPIOP7_Handler
+                               PROC
+  845 000000D2                 EXPORT           GPIOP7_Handler [WEAK]
+  846 000000D2 E7FE            B                .
+  847 000000D4                 ENDP
+  848 000000D4         
+  850 000000D4         GPIOQ0_Handler
+                               PROC
+  851 000000D4                 EXPORT           GPIOQ0_Handler [WEAK]
+  852 000000D4 E7FE            B                .
+  853 000000D6                 ENDP
+  854 000000D6         
+  856 000000D6         GPIOQ1_Handler
+                               PROC
+  857 000000D6                 EXPORT           GPIOQ1_Handler [WEAK]
+  858 000000D6 E7FE            B                .
+  859 000000D8                 ENDP
+  860 000000D8         
+  862 000000D8         GPIOQ2_Handler
+                               PROC
+  863 000000D8                 EXPORT           GPIOQ2_Handler [WEAK]
+  864 000000D8 E7FE            B                .
+  865 000000DA                 ENDP
+  866 000000DA         
+  868 000000DA         GPIOQ3_Handler
+                               PROC
+  869 000000DA                 EXPORT           GPIOQ3_Handler [WEAK]
+  870 000000DA E7FE            B                .
+  871 000000DC                 ENDP
+  872 000000DC         
+  874 000000DC         GPIOQ4_Handler
+                               PROC
+  875 000000DC                 EXPORT           GPIOQ4_Handler [WEAK]
+  876 000000DC E7FE            B                .
+  877 000000DE                 ENDP
+  878 000000DE         
+  880 000000DE         GPIOQ5_Handler
+                               PROC
+  881 000000DE                 EXPORT           GPIOQ5_Handler [WEAK]
+  882 000000DE E7FE            B                .
+  883 000000E0                 ENDP
+  884 000000E0         
+  886 000000E0         GPIOQ6_Handler
+                               PROC
+  887 000000E0                 EXPORT           GPIOQ6_Handler [WEAK]
+  888 000000E0 E7FE            B                .
+  889 000000E2                 ENDP
+  890 000000E2         
+  892 000000E2         GPIOQ7_Handler
+                               PROC
+  893 000000E2                 EXPORT           GPIOQ7_Handler [WEAK]
+  894 000000E2 E7FE            B                .
+  895 000000E4                 ENDP
+  896 000000E4         
+  898 000000E4         GPIOR_Handler
+                               PROC
+  899 000000E4                 EXPORT           GPIOR_Handler [WEAK]
+  900 000000E4 E7FE            B                .
+
+
+
+ARM Macro Assembler    Page 19 
+
+
+  901 000000E6                 ENDP
+  902 000000E6         
+  904 000000E6         GPIOS_Handler
+                               PROC
+  905 000000E6                 EXPORT           GPIOS_Handler [WEAK]
+  906 000000E6 E7FE            B                .
+  907 000000E8                 ENDP
+  908 000000E8         
+  910 000000E8         PMW1_0_Handler
+                               PROC
+  911 000000E8                 EXPORT           PMW1_0_Handler [WEAK]
+  912 000000E8 E7FE            B                .
+  913 000000EA                 ENDP
+  914 000000EA         
+  916 000000EA         PWM1_1_Handler
+                               PROC
+  917 000000EA                 EXPORT           PWM1_1_Handler [WEAK]
+  918 000000EA E7FE            B                .
+  919 000000EC                 ENDP
+  920 000000EC         
+  922 000000EC         PWM1_2_Handler
+                               PROC
+  923 000000EC                 EXPORT           PWM1_2_Handler [WEAK]
+  924 000000EC E7FE            B                .
+  925 000000EE                 ENDP
+  926 000000EE         
+  928 000000EE         PWM1_3_Handler
+                               PROC
+  929 000000EE                 EXPORT           PWM1_3_Handler [WEAK]
+  930 000000EE E7FE            B                .
+  931 000000F0                 ENDP
+  932 000000F0         
+  934 000000F0         PWM1_FAULT_Handler
+                               PROC
+  935 000000F0                 EXPORT           PWM1_FAULT_Handler [WEAK]
+  936 000000F0 E7FE            B                .
+  937 000000F2                 ENDP
+  938 000000F2         
+  939 000000F2 00 00           ALIGN
+  940 000000F4         
+  941 000000F4         
+  942 000000F4         ; User Initial Stack & Heap
+  943 000000F4         
+  944 000000F4                 IF               :DEF:__MICROLIB
+  945 000000F4         
+  946 000000F4                 EXPORT           __initial_sp
+  947 000000F4                 EXPORT           __heap_base
+  948 000000F4                 EXPORT           __heap_limit
+  949 000000F4         
+  950 000000F4                 ELSE
+  964                          ENDIF
+  965 000000F4         
+  966 000000F4         
+  967 000000F4                 END
+              00000000 
+              00000000 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp.sp --apcs=
+interwork --depend=.\build_files\keiluvisoin_startup.d -o.\build_files\keiluvis
+oin_startup.o -I.\RTE\_Target_1 -IC:\Users\Sarea.alhariri\AppData\Local\Arm\Pac
+
+
+
+ARM Macro Assembler    Page 20 
+
+
+ks\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Users\Sarea.alhariri\AppData\Local\A
+rm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123 --predefine="__EVAL SETA 1"
+ --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 530" --pre
+define="_RTE_ SETA 1" --predefine="TM4C123GH6PM SETA 1" --predefine="_RTE_ SETA
+ 1" --list=.\keiluvisoin_startup.lst ..\..\OsekLib\startup\keilUvisoin_startup.
+s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+STACK 00000000
+
+Symbol: STACK
+   Definitions
+      At line 35 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      None
+Comment: STACK unused
+Stack_Mem 00000000
+
+Symbol: Stack_Mem
+   Definitions
+      At line 36 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      None
+Comment: Stack_Mem unused
+__initial_sp 00000200
+
+Symbol: __initial_sp
+   Definitions
+      At line 37 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 66 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 946 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+HEAP 00000000
+
+Symbol: HEAP
+   Definitions
+      At line 46 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      None
+Comment: HEAP unused
+Heap_Mem 00000000
+
+Symbol: Heap_Mem
+   Definitions
+      At line 48 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      None
+Comment: Heap_Mem unused
+__heap_base 00000000
+
+Symbol: __heap_base
+   Definitions
+      At line 47 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 947 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+Comment: __heap_base used once
+__heap_limit 00000000
+
+Symbol: __heap_limit
+   Definitions
+      At line 49 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 948 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+Comment: __heap_limit used once
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 58 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 66 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 59 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 227 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+__Vectors_End 0000026C
+
+Symbol: __Vectors_End
+   Definitions
+      At line 225 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 60 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 227 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 229 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      None
+Comment: .text unused
+ADC0SS0_Handler 00000036
+
+Symbol: ADC0SS0_Handler
+   Definitions
+      At line 376 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 99 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 377 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+ADC0SS1_Handler 00000038
+
+Symbol: ADC0SS1_Handler
+   Definitions
+      At line 382 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 100 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 383 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+ADC0SS2_Handler 0000003A
+
+Symbol: ADC0SS2_Handler
+   Definitions
+      At line 388 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 101 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 389 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+ADC0SS3_Handler 0000003C
+
+Symbol: ADC0SS3_Handler
+   Definitions
+      At line 394 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 102 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 395 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+ADC1SS0_Handler 00000078
+
+Symbol: ADC1SS0_Handler
+   Definitions
+      At line 574 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 133 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 575 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+ADC1SS1_Handler 0000007A
+
+Symbol: ADC1SS1_Handler
+   Definitions
+      At line 580 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 134 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 581 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+ADC1SS2_Handler 0000007C
+
+Symbol: ADC1SS2_Handler
+   Definitions
+      At line 586 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 135 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 587 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+ADC1SS3_Handler 0000007E
+
+Symbol: ADC1SS3_Handler
+   Definitions
+      At line 592 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 136 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 593 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+BusFault_Handler 0000000E
+
+Symbol: BusFault_Handler
+   Definitions
+      At line 262 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 71 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 263 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+CAN0_Handler 00000068
+
+Symbol: CAN0_Handler
+   Definitions
+      At line 526 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 124 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 527 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+CAN1_Handler 0000006A
+
+Symbol: CAN1_Handler
+   Definitions
+      At line 532 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 125 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 533 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+CAN2_Handler 0000006C
+
+Symbol: CAN2_Handler
+   Definitions
+      At line 538 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 126 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 539 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+COMP0_Handler 0000004C
+
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Relocatable symbols
+
+Symbol: COMP0_Handler
+   Definitions
+      At line 442 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 110 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 443 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+COMP1_Handler 0000004E
+
+Symbol: COMP1_Handler
+   Definitions
+      At line 448 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 111 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 449 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+COMP2_Handler 00000050
+
+Symbol: COMP2_Handler
+   Definitions
+      At line 454 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 112 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 455 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+DebugMon_Handler 00000014
+
+Symbol: DebugMon_Handler
+   Definitions
+      At line 277 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 78 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 278 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+FLASH_Handler 00000054
+
+Symbol: FLASH_Handler
+   Definitions
+      At line 466 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 114 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 467 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+FPU_Handler 000000B8
+
+Symbol: FPU_Handler
+   Definitions
+      At line 766 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 191 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 767 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOA_Handler 0000001A
+
+Symbol: GPIOA_Handler
+   Definitions
+      At line 292 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 85 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+
+
+ARM Macro Assembler    Page 4 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 293 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOB_Handler 0000001C
+
+Symbol: GPIOB_Handler
+   Definitions
+      At line 298 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 86 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 299 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOC_Handler 0000001E
+
+Symbol: GPIOC_Handler
+   Definitions
+      At line 304 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 87 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 305 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOD_Handler 00000020
+
+Symbol: GPIOD_Handler
+   Definitions
+      At line 310 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 88 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 311 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOE_Handler 00000022
+
+Symbol: GPIOE_Handler
+   Definitions
+      At line 316 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 89 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 317 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOF_Handler 00000056
+
+Symbol: GPIOF_Handler
+   Definitions
+      At line 472 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 115 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 473 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOG_Handler 00000058
+
+Symbol: GPIOG_Handler
+   Definitions
+      At line 478 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 116 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 479 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOH_Handler 0000005A
+
+Symbol: GPIOH_Handler
+
+
+
+ARM Macro Assembler    Page 5 Alphabetic symbol ordering
+Relocatable symbols
+
+   Definitions
+      At line 484 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 117 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 485 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOJ_Handler 00000080
+
+Symbol: GPIOJ_Handler
+   Definitions
+      At line 598 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 139 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 599 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOK_Handler 00000082
+
+Symbol: GPIOK_Handler
+   Definitions
+      At line 604 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 140 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 605 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOL_Handler 00000084
+
+Symbol: GPIOL_Handler
+   Definitions
+      At line 610 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 141 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 611 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOM_Handler 000000BE
+
+Symbol: GPIOM_Handler
+   Definitions
+      At line 784 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 196 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 785 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPION_Handler 000000C0
+
+Symbol: GPION_Handler
+   Definitions
+      At line 790 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 197 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 791 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOP0_Handler 000000C4
+
+Symbol: GPIOP0_Handler
+   Definitions
+      At line 802 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 201 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 803 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+
+
+ARM Macro Assembler    Page 6 Alphabetic symbol ordering
+Relocatable symbols
+
+
+GPIOP1_Handler 000000C6
+
+Symbol: GPIOP1_Handler
+   Definitions
+      At line 808 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 202 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 809 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOP2_Handler 000000C8
+
+Symbol: GPIOP2_Handler
+   Definitions
+      At line 814 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 203 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 815 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOP3_Handler 000000CA
+
+Symbol: GPIOP3_Handler
+   Definitions
+      At line 820 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 204 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 821 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOP4_Handler 000000CC
+
+Symbol: GPIOP4_Handler
+   Definitions
+      At line 826 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 205 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 827 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOP5_Handler 000000CE
+
+Symbol: GPIOP5_Handler
+   Definitions
+      At line 832 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 206 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 833 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOP6_Handler 000000D0
+
+Symbol: GPIOP6_Handler
+   Definitions
+      At line 838 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 207 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 839 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOP7_Handler 000000D2
+
+Symbol: GPIOP7_Handler
+   Definitions
+
+
+
+ARM Macro Assembler    Page 7 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 844 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 208 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 845 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOQ0_Handler 000000D4
+
+Symbol: GPIOQ0_Handler
+   Definitions
+      At line 850 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 209 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 851 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOQ1_Handler 000000D6
+
+Symbol: GPIOQ1_Handler
+   Definitions
+      At line 856 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 210 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 857 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOQ2_Handler 000000D8
+
+Symbol: GPIOQ2_Handler
+   Definitions
+      At line 862 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 211 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 863 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOQ3_Handler 000000DA
+
+Symbol: GPIOQ3_Handler
+   Definitions
+      At line 868 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 212 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 869 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOQ4_Handler 000000DC
+
+Symbol: GPIOQ4_Handler
+   Definitions
+      At line 874 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 213 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 875 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOQ5_Handler 000000DE
+
+Symbol: GPIOQ5_Handler
+   Definitions
+      At line 880 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 214 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 881 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+
+
+
+ARM Macro Assembler    Page 8 Alphabetic symbol ordering
+Relocatable symbols
+
+GPIOQ6_Handler 000000E0
+
+Symbol: GPIOQ6_Handler
+   Definitions
+      At line 886 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 215 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 887 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOQ7_Handler 000000E2
+
+Symbol: GPIOQ7_Handler
+   Definitions
+      At line 892 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 216 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 893 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOR_Handler 000000E4
+
+Symbol: GPIOR_Handler
+   Definitions
+      At line 898 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 217 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 899 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+GPIOS_Handler 000000E6
+
+Symbol: GPIOS_Handler
+   Definitions
+      At line 904 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 218 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 905 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+HIB_Handler 0000006E
+
+Symbol: HIB_Handler
+   Definitions
+      At line 544 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 128 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 545 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+HardFault_Handler 0000000A
+
+Symbol: HardFault_Handler
+   Definitions
+      At line 252 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 69 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 253 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+I2C0_Handler 0000002A
+
+Symbol: I2C0_Handler
+   Definitions
+      At line 340 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+
+
+ARM Macro Assembler    Page 9 Alphabetic symbol ordering
+Relocatable symbols
+
+   Uses
+      At line 93 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 341 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+I2C1_Handler 00000064
+
+Symbol: I2C1_Handler
+   Definitions
+      At line 514 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 122 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 515 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+I2C2_Handler 00000094
+
+Symbol: I2C2_Handler
+   Definitions
+      At line 658 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 153 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 659 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+I2C3_Handler 00000096
+
+Symbol: I2C3_Handler
+   Definitions
+      At line 664 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 154 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 665 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+I2C4_Handler 000000BA
+
+Symbol: I2C4_Handler
+   Definitions
+      At line 772 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 194 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 773 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+I2C5_Handler 000000BC
+
+Symbol: I2C5_Handler
+   Definitions
+      At line 778 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 195 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 779 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+MemManage_Handler 0000000C
+
+Symbol: MemManage_Handler
+   Definitions
+      At line 257 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 70 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 258 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+NMI_Handler 00000008
+
+
+
+ARM Macro Assembler    Page 10 Alphabetic symbol ordering
+Relocatable symbols
+
+
+Symbol: NMI_Handler
+   Definitions
+      At line 247 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 68 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 248 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+PMW0_FAULT_Handler 0000002C
+
+Symbol: PMW0_FAULT_Handler
+   Definitions
+      At line 346 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 94 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 347 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+PMW1_0_Handler 000000E8
+
+Symbol: PMW1_0_Handler
+   Definitions
+      At line 910 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 219 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 911 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+PWM0_0_Handler 0000002E
+
+Symbol: PWM0_0_Handler
+   Definitions
+      At line 352 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 95 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 353 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+PWM0_1_Handler 00000030
+
+Symbol: PWM0_1_Handler
+   Definitions
+      At line 358 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 96 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 359 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+PWM0_2_Handler 00000032
+
+Symbol: PWM0_2_Handler
+   Definitions
+      At line 364 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 97 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 365 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+PWM0_3_Handler 00000072
+
+Symbol: PWM0_3_Handler
+   Definitions
+      At line 556 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 11 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 130 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 557 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+PWM1_1_Handler 000000EA
+
+Symbol: PWM1_1_Handler
+   Definitions
+      At line 916 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 220 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 917 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+PWM1_2_Handler 000000EC
+
+Symbol: PWM1_2_Handler
+   Definitions
+      At line 922 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 221 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 923 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+PWM1_3_Handler 000000EE
+
+Symbol: PWM1_3_Handler
+   Definitions
+      At line 928 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 222 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 929 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+PWM1_FAULT_Handler 000000F0
+
+Symbol: PWM1_FAULT_Handler
+   Definitions
+      At line 934 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 223 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 935 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+PendSV_Handler 00000016
+
+Symbol: PendSV_Handler
+   Definitions
+      At line 282 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 283 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+Comment: PendSV_Handler used once
+QEI0_Handler 00000034
+
+Symbol: QEI0_Handler
+   Definitions
+      At line 370 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 98 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 371 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+QEI1_Handler 00000066
+
+Symbol: QEI1_Handler
+
+
+
+ARM Macro Assembler    Page 12 Alphabetic symbol ordering
+Relocatable symbols
+
+   Definitions
+      At line 520 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 123 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 521 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+QEI2_Handler 000000C2
+
+Symbol: QEI2_Handler
+   Definitions
+      At line 796 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 198 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 797 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 234 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 67 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 235 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+SSI0_Handler 00000028
+
+Symbol: SSI0_Handler
+   Definitions
+      At line 334 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 92 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 335 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+SSI1_Handler 0000005E
+
+Symbol: SSI1_Handler
+   Definitions
+      At line 496 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 119 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 497 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+SSI2_Handler 00000086
+
+Symbol: SSI2_Handler
+   Definitions
+      At line 616 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 142 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 617 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+SSI3_Handler 00000088
+
+Symbol: SSI3_Handler
+   Definitions
+      At line 622 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 143 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 623 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+
+
+ARM Macro Assembler    Page 13 Alphabetic symbol ordering
+Relocatable symbols
+
+
+SVC_Handler 00000012
+
+Symbol: SVC_Handler
+   Definitions
+      At line 272 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 273 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+Comment: SVC_Handler used once
+SYSCTL_Handler 00000052
+
+Symbol: SYSCTL_Handler
+   Definitions
+      At line 460 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 113 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 461 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+SysTick_Handler 00000018
+
+Symbol: SysTick_Handler
+   Definitions
+      At line 287 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 288 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+Comment: SysTick_Handler used once
+TIMER0A_Handler 00000040
+
+Symbol: TIMER0A_Handler
+   Definitions
+      At line 406 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 104 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 407 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+TIMER0B_Handler 00000042
+
+Symbol: TIMER0B_Handler
+   Definitions
+      At line 412 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 105 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 413 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+TIMER1A_Handler 00000044
+
+Symbol: TIMER1A_Handler
+   Definitions
+      At line 418 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 106 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 419 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+TIMER1B_Handler 00000046
+
+Symbol: TIMER1B_Handler
+   Definitions
+      At line 424 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 14 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 107 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 425 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+TIMER2A_Handler 00000048
+
+Symbol: TIMER2A_Handler
+   Definitions
+      At line 430 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 108 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 431 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+TIMER2B_Handler 0000004A
+
+Symbol: TIMER2B_Handler
+   Definitions
+      At line 436 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 109 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 437 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+TIMER3A_Handler 00000060
+
+Symbol: TIMER3A_Handler
+   Definitions
+      At line 502 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 120 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 503 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+TIMER3B_Handler 00000062
+
+Symbol: TIMER3B_Handler
+   Definitions
+      At line 508 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 121 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 509 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+TIMER4A_Handler 00000098
+
+Symbol: TIMER4A_Handler
+   Definitions
+      At line 670 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 155 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 671 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+TIMER4B_Handler 0000009A
+
+Symbol: TIMER4B_Handler
+   Definitions
+      At line 676 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 156 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 677 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+TIMER5A_Handler 0000009C
+
+
+
+
+ARM Macro Assembler    Page 15 Alphabetic symbol ordering
+Relocatable symbols
+
+Symbol: TIMER5A_Handler
+   Definitions
+      At line 682 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 177 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 683 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+TIMER5B_Handler 0000009E
+
+Symbol: TIMER5B_Handler
+   Definitions
+      At line 688 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 178 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 689 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+UART0_Handler 00000024
+
+Symbol: UART0_Handler
+   Definitions
+      At line 322 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 90 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 323 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+UART1_Handler 00000026
+
+Symbol: UART1_Handler
+   Definitions
+      At line 328 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 91 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 329 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+UART2_Handler 0000005C
+
+Symbol: UART2_Handler
+   Definitions
+      At line 490 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 118 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 491 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+UART3_Handler 0000008A
+
+Symbol: UART3_Handler
+   Definitions
+      At line 628 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 144 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 629 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+UART4_Handler 0000008C
+
+Symbol: UART4_Handler
+   Definitions
+      At line 634 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 145 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+
+
+ARM Macro Assembler    Page 16 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 635 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+UART5_Handler 0000008E
+
+Symbol: UART5_Handler
+   Definitions
+      At line 640 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 146 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 641 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+UART6_Handler 00000090
+
+Symbol: UART6_Handler
+   Definitions
+      At line 646 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 147 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 647 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+UART7_Handler 00000092
+
+Symbol: UART7_Handler
+   Definitions
+      At line 652 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 148 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 653 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+UDMAERR_Handler 00000076
+
+Symbol: UDMAERR_Handler
+   Definitions
+      At line 568 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 132 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 569 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+UDMA_Handler 00000074
+
+Symbol: UDMA_Handler
+   Definitions
+      At line 562 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 131 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 563 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+USB0_Handler 00000070
+
+Symbol: USB0_Handler
+   Definitions
+      At line 550 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 129 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 551 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+UsageFault_Handler 00000010
+
+Symbol: UsageFault_Handler
+
+
+
+ARM Macro Assembler    Page 17 Alphabetic symbol ordering
+Relocatable symbols
+
+   Definitions
+      At line 267 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 72 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 268 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+WDT0_Handler 0000003E
+
+Symbol: WDT0_Handler
+   Definitions
+      At line 400 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 103 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 401 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+WTIMER0A_Handler 000000A0
+
+Symbol: WTIMER0A_Handler
+   Definitions
+      At line 694 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 179 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 695 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+WTIMER0B_Handler 000000A2
+
+Symbol: WTIMER0B_Handler
+   Definitions
+      At line 700 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 180 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 701 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+WTIMER1A_Handler 000000A4
+
+Symbol: WTIMER1A_Handler
+   Definitions
+      At line 706 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 181 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 707 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+WTIMER1B_Handler 000000A6
+
+Symbol: WTIMER1B_Handler
+   Definitions
+      At line 712 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 182 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 713 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+WTIMER2A_Handler 000000A8
+
+Symbol: WTIMER2A_Handler
+   Definitions
+      At line 718 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 183 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 719 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+
+
+ARM Macro Assembler    Page 18 Alphabetic symbol ordering
+Relocatable symbols
+
+
+WTIMER2B_Handler 000000AA
+
+Symbol: WTIMER2B_Handler
+   Definitions
+      At line 724 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 184 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 725 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+WTIMER3A_Handler 000000AC
+
+Symbol: WTIMER3A_Handler
+   Definitions
+      At line 730 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 185 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 731 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+WTIMER3B_Handler 000000AE
+
+Symbol: WTIMER3B_Handler
+   Definitions
+      At line 736 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 186 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 737 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+WTIMER4A_Handler 000000B0
+
+Symbol: WTIMER4A_Handler
+   Definitions
+      At line 742 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 187 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 743 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+WTIMER4B_Handler 000000B2
+
+Symbol: WTIMER4B_Handler
+   Definitions
+      At line 748 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 188 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 749 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+WTIMER5A_Handler 000000B4
+
+Symbol: WTIMER5A_Handler
+   Definitions
+      At line 754 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 189 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 755 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+WTIMER5B_Handler 000000B6
+
+Symbol: WTIMER5B_Handler
+   Definitions
+
+
+
+ARM Macro Assembler    Page 19 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 760 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 190 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+      At line 761 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+
+119 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+Heap_Size 00000000
+
+Symbol: Heap_Size
+   Definitions
+      At line 44 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 48 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+Comment: Heap_Size used once
+Stack_Size 00000200
+
+Symbol: Stack_Size
+   Definitions
+      At line 33 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 36 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+Comment: Stack_Size used once
+__Vectors_Size 0000026C
+
+Symbol: __Vectors_Size
+   Definitions
+      At line 227 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 61 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+Comment: __Vectors_Size used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+OsPort_PendSVHandler 00000000
+
+Symbol: OsPort_PendSVHandler
+   Definitions
+      At line 63 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 80 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+Comment: OsPort_PendSVHandler used once
+SVC_Dispatcher 00000000
+
+Symbol: SVC_Dispatcher
+   Definitions
+      At line 62 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 77 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+Comment: SVC_Dispatcher used once
+SystemInit 00000000
+
+Symbol: SystemInit
+   Definitions
+      At line 236 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 238 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+Comment: SystemInit used once
+SystemTimerHandler 00000000
+
+Symbol: SystemTimerHandler
+   Definitions
+      At line 64 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 81 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+Comment: SystemTimerHandler used once
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 237 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+   Uses
+      At line 240 in file ..\..\OsekLib\startup\keilUvisoin_startup.s
+Comment: __main used once
+5 symbols
+475 symbols in table

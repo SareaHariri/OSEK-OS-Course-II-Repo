@@ -1,0 +1,11 @@
+.\build_files\osekintroii_example9.o: OsekIntroII_Example9.c
+.\build_files\osekintroii_example9.o: ..\..\OsekLib\os.h
+.\build_files\osekintroii_example9.o: ..\..\oil\OsCfg.h
+.\build_files\osekintroii_example9.o: ..\..\OsekLib\OsTypes.h
+.\build_files\osekintroii_example9.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\build_files\osekintroii_example9.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\build_files\osekintroii_example9.o: switch.h
+.\build_files\osekintroii_example9.o: gpio.h
+.\build_files\osekintroii_example9.o: sysctl.h
+.\build_files\osekintroii_example9.o: hw_memmap.h
+.\build_files\osekintroii_example9.o: tm4c123gh6pm.h

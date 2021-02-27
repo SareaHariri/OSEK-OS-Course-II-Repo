@@ -1,0 +1,10 @@
+.\build_files\osekintroii_example5.o: OsekIntroII_Example5.c
+.\build_files\osekintroii_example5.o: ..\..\OsekLib\os.h
+.\build_files\osekintroii_example5.o: ..\..\oil\OsCfg.h
+.\build_files\osekintroii_example5.o: ..\..\OsekLib\OsTypes.h
+.\build_files\osekintroii_example5.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\build_files\osekintroii_example5.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\build_files\osekintroii_example5.o: ..\OsekIntroII_Example1\tm4c123gh6pm.h
+.\build_files\osekintroii_example5.o: ..\OsekIntroII_Example1\hw_memmap.h
+.\build_files\osekintroii_example5.o: ..\OsekIntroII_Example1\gpio.h
+.\build_files\osekintroii_example5.o: ..\OsekIntroII_Example1\sysctl.h
